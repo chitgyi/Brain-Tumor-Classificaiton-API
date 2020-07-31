@@ -1,6 +1,6 @@
 class Model:
     __instance = None
-    score = 0.8
+    score = 99.4
 
     @staticmethod
     def instance():

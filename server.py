@@ -14,13 +14,14 @@ def hello():
 @app.route("/predict", methods=["POST"])
 def predict():
     image = request.files["image"]
+    image.save("1.png")
     return jsonify(
         {
             "code": 200,
             "message": "Success",
             "data": {
                 "score": Model.predict(),
-                "type": "Leve 3",
+                "type": "Gloma",
                 "image": image.filename,
                 "imageType": image.content_type
             },
