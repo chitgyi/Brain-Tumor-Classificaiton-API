@@ -1,9 +1,15 @@
 from flask import Flask
 from flask import request
 from flask import jsonify, render_template
-from Model import *
+from tensorflow.keras.models import load_model
+from PIL import Image
+import numpy as np
+import utils as funs
+
+
 
 app = Flask(__name__, template_folder="public")
+model = load_model("./brain-tumor-model.h5")
 
 
 @app.route("/")
@@ -14,20 +20,25 @@ def hello():
 @app.route("/predict", methods=["POST"])
 def predict():
     image = request.files["image"]
-    image.save("1.png")
+    image.save("images/" + image.filename)
+    loadedImage = Image.open("images/" + image.filename).convert('LA')
+    x = np.array(loadedImage.resize((150, 150)))
+    x = x.reshape(-1, 150, 150, 2)
+    answ = model.predict_on_batch(x)
+    classification = np.where(answ == np.amax(answ))[1][0]
     return jsonify(
         {
             "code": 200,
             "message": "Success",
             "data": {
-                "score": Model.predict(),
-                "type": "Gloma",
+                "type": funs.names(classification),
+                "score": answ[0][classification]*100,
                 "image": image.filename,
-                "imageType": image.content_type
+                "imageType": image.content_type,
             },
         }
     )
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="192.168.42.23", debug=True)
