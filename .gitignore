@@ -1,4 +1,5 @@
 .vscode/
 __pycache__/
-*.h5
+# *.h5
+# classes.txt
 images/*

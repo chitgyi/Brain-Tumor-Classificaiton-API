@@ -41,4 +41,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(host="192.168.42.23", debug=True)
+    app.run(host="0.0.0.0", debug=True)
